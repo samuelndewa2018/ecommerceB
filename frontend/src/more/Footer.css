@@ -1,0 +1,98 @@
+/*footer*/
+.footer1st .logo {
+  font-size: 2rem !important;
+  color: #333;
+  font-weight: bolder;
+}
+.footer1st .logo span {
+  color: var(--pink);
+}
+footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  background: #eee;
+}
+footer .col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+footer .logo {
+  margin-bottom: 30px;
+}
+footer h4 {
+  font-size: 16px;
+  padding-bottom: 20px;
+  font-weight: 600;
+}
+footer p {
+  font-size: 13px;
+  margin: 0 0 8px 0;
+}
+footer a {
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: #222;
+  text-decoration: none;
+}
+footer .follow {
+  margin-top: 20px;
+}
+footer .follow i {
+  color: #465b52;
+  padding-right: 4px;
+  cursor: pointer;
+}
+footer .follow i:hover,
+footer a:hover {
+  color: #3bb77e;
+}
+footer .install img {
+  margin: 10px 0 15px 0;
+  cursor: pointer;
+}
+footer .install .row img {
+  border: 1px solid #3bb77e;
+  border-radius: 6px;
+  margin: 2px;
+}
+footer .copyright {
+  width: 100%;
+  text-align: center;
+}
+.footer1st p svg {
+  margin: 6px 4px 0 0;
+}
+.footer1st p strong {
+  margin-left: 2px;
+}
+
+@media only screen and (max-width: 768px) {
+  footer {
+    display: block;
+    text-align: center;
+    margin-bottom: 35px;
+  }
+  #newsletter .form {
+    width: 100%;
+  }
+  #newsletter h4 {
+    text-align: center;
+  }
+  #newsletter p {
+    text-align: center;
+  }
+  .icon {
+    margin: 1% 30%;
+    align-items: center;
+    text-align: center;
+  }
+  #Exclude {
+    display: none;
+  }
+  .section_p1 {
+    padding: 10px 20px;
+  }
+}

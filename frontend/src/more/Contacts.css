@@ -1,0 +1,97 @@
+.contact {
+  padding: 1rem 6% !important;
+}
+.contact .Contactsrow .contactInfo {
+  padding: 2rem 2.5rem;
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 10%);
+  border: 0.1rem solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: 0.5rem;
+  min-width: 50%;
+}
+.Contactheading {
+  font-size: 20px;
+}
+.contact .Contactsrow .contactInfo .box {
+  position: relative;
+  padding: 5px 0;
+  display: flex;
+}
+.contact .Contactsrow .contactInfo .box .text {
+  display: flex;
+  margin-left: 20px;
+  font-size: 16px;
+  color: #000;
+  flex-direction: column;
+  font-weight: 300;
+}
+.contact .Contactsrow {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+}
+.contact .Contactsrow .contactInfo .box .iconi {
+  color: rgb(83, 192, 142);
+  margin: 14px 2px 14px 14px;
+}
+
+.contact .Contactsrow form {
+  flex: 1 1 40rem;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+  border: 0.1rem solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  border-radius: 0.5rem;
+  max-width: 50%;
+}
+
+.contact .Contactsrow .image {
+  flex: 1 1 40rem;
+}
+
+.contact .Contactsrow .image img {
+  width: 100%;
+}
+
+.contact .Contactsrow form .box {
+  padding: 1rem;
+  font-size: 1.1rem;
+  color: #333;
+  text-transform: none;
+  border: 0.1rem solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  margin: 0.3rem 0;
+  width: 100%;
+}
+.contact .Contactsrow form .box:focus {
+  border-color: var(--pink);
+}
+
+.contact .Contactsrow form textarea {
+  height: 9rem;
+  resize: none;
+}
+@media (max-width: 768px) {
+  .contact .Contactsrow {
+    display: flex;
+    flex-direction: column;
+  }
+  .contact .Contactsrow .contactInfo .box .text {
+    display: flex;
+    margin-left: 8px;
+    font-size: 16px;
+    color: #000;
+    flex-direction: column;
+    font-weight: 300;
+  }
+  .contact .Contactsrow .contactInfo {
+    width: 100%;
+    padding: 0;
+  }
+  .contact .Contactsrow .contactInfo .box {
+    padding: 3px 0;
+  }
+  .contact .Contactsrow .contactInfo .box .iconi {
+    margin: 14px 2px 14px 5px;
+  }
+}

@@ -1,21 +1,21 @@
-import React, { useContext, useEffect, useReducer } from 'react';
-import { Helmet } from 'react-helmet-async';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
-import { Store } from '../Store';
-import { getError } from '../utils';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
+import React, { useContext, useEffect, useReducer } from "react";
+import { Helmet } from "react-helmet-async";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
+import { Store } from "../Store";
+import { getError } from "../utils";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'FETCH_REQUEST':
+    case "FETCH_REQUEST":
       return { ...state, loading: true };
-    case 'FETCH_SUCCESS':
+    case "FETCH_SUCCESS":
       return { ...state, orders: action.payload, loading: false };
-    case 'FETCH_FAIL':
+    case "FETCH_FAIL":
       return { ...state, loading: false, error: action.payload };
     default:
       return state;
@@ -29,21 +29,21 @@ export default function OrderHistoryScreen() {
 
   const [{ loading, error, orders }, dispatch] = useReducer(reducer, {
     loading: true,
-    error: '',
+    error: "",
   });
   useEffect(() => {
     const fetchData = async () => {
-      dispatch({ type: 'FETCH_REQUEST' });
+      dispatch({ type: "FETCH_REQUEST" });
       try {
         const { data } = await axios.get(
           `/api/orders/mine`,
 
           { headers: { Authorization: `Bearer ${userInfo.token}` } }
         );
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (error) {
         dispatch({
-          type: 'FETCH_FAIL',
+          type: "FETCH_FAIL",
           payload: getError(error),
         });
       }
@@ -51,7 +51,17 @@ export default function OrderHistoryScreen() {
     fetchData();
   }, [userInfo]);
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  function isPaid(order) {
+    if (order.isPaid) {
+      return order.paidAt.substring(0, 10);
+    }
+    if (order.isDelivered) {
+      return order.deliveredAt.substring(0, 10);
+    } else {
+      return "No";
+    }
   }
   return (
     <Container className="mt-3">
@@ -81,19 +91,19 @@ export default function OrderHistoryScreen() {
             <tbody>
               {orders.map((order) => (
                 <tr key={order._id}>
-                  <td>{order._id.replace(/\D/g, '')}</td>
+                  <td>{order._id.replace(/\D/g, "")}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
                   <td> {numberWithCommas(order.totalPrice.toFixed(2))}</td>
-                  <td className={order.isPaid ? 'green' : 'red'}>
-                    {order.isPaid ? order.paidAt.substring(0, 10) : 'No'}
+                  <td className={order.isPaid || order.isDelivered ? "green" : "red"}>
+                    {isPaid(order)}
                   </td>
-                  <td>
+                  <td className={order.isDelivered ? "green" : "red"}>
                     {order.isDelivered
                       ? order.deliveredAt.substring(0, 10)
-                      : 'No'}
+                      : "No"}
                   </td>
                   <td>
-                    {order.isShipped ? order.shippedAt.substring(0, 10) : 'No'}
+                    {order.isShipped ? order.shippedAt.substring(0, 10) : "No"}
                   </td>
                   <td>
                     <Button

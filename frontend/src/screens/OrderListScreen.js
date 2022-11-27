@@ -1,38 +1,38 @@
-import axios from 'axios';
-import React, { useContext, useEffect, useReducer } from 'react';
-import Button from 'react-bootstrap/Button';
-import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
-import { Store } from '../Store';
-import { getError } from '../utils';
-import { toast } from 'react-toastify';
-import Container from 'react-bootstrap/Container';
+import axios from "axios";
+import React, { useContext, useEffect, useReducer } from "react";
+import Button from "react-bootstrap/Button";
+import { Helmet } from "react-helmet-async";
+import { useNavigate } from "react-router-dom";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
+import { Store } from "../Store";
+import { getError } from "../utils";
+import { toast } from "react-toastify";
+import Container from "react-bootstrap/Container";
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'FETCH_REQUEST':
+    case "FETCH_REQUEST":
       return { ...state, loading: true };
-    case 'FETCH_SUCCESS':
+    case "FETCH_SUCCESS":
       return {
         ...state,
         orders: action.payload,
         loading: false,
       };
-    case 'FETCH_FAIL':
+    case "FETCH_FAIL":
       return { ...state, loading: false, error: action.payload };
-    case 'DELETE_REQUEST':
+    case "DELETE_REQUEST":
       return { ...state, loadingDelete: true, successDelete: false };
-    case 'DELETE_SUCCESS':
+    case "DELETE_SUCCESS":
       return {
         ...state,
         loadingDelete: false,
         successDelete: true,
       };
-    case 'DELETE_FAIL':
+    case "DELETE_FAIL":
       return { ...state, loadingDelete: false };
-    case 'DELETE_RESET':
+    case "DELETE_RESET":
       return { ...state, loadingDelete: false, successDelete: false };
     default:
       return state;
@@ -45,48 +45,62 @@ export default function OrderListScreen() {
   const [{ loading, error, orders, loadingDelete, successDelete }, dispatch] =
     useReducer(reducer, {
       loading: true,
-      error: '',
+      error: "",
     });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        dispatch({ type: 'FETCH_REQUEST' });
+        dispatch({ type: "FETCH_REQUEST" });
         const { data } = await axios.get(`/api/orders`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
         dispatch({
-          type: 'FETCH_FAIL',
+          type: "FETCH_FAIL",
           payload: getError(err),
         });
       }
     };
     if (successDelete) {
-      dispatch({ type: 'DELETE_RESET' });
+      dispatch({ type: "DELETE_RESET" });
     } else {
       fetchData();
     }
   }, [userInfo, successDelete]);
 
   const deleteHandler = async (order) => {
-    if (window.confirm('Are you sure to delete?')) {
+    if (window.confirm("Are you sure to delete?")) {
       try {
-        dispatch({ type: 'DELETE_REQUEST' });
+        dispatch({ type: "DELETE_REQUEST" });
         await axios.delete(`/api/orders/${order._id}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         });
-        toast.success('order deleted successfully');
-        dispatch({ type: 'DELETE_SUCCESS' });
+        toast.success("order deleted successfully");
+        dispatch({ type: "DELETE_SUCCESS" });
       } catch (err) {
         toast.error(getError(error));
         dispatch({
-          type: 'DELETE_FAIL',
+          type: "DELETE_FAIL",
         });
       }
     }
   };
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  function isPaid(order) {
+    if (order.isPaid) {
+      return order.paidAt.substring(0, 10);
+    }
+    if (order.isDelivered) {
+      return order.deliveredAt.substring(0, 10);
+    } else {
+      return "No";
+    }
+  }
+
   return (
     <Container className="mt-3">
       <div>
@@ -116,19 +130,25 @@ export default function OrderListScreen() {
             <tbody>
               {orders.map((order) => (
                 <tr key={order._id}>
-                  <td>{order._id.replace(/\D/g, '')}</td>
-                  <td>{order.user ? order.user.name : 'DELETED USER'}</td>
+                  <td>{order._id.replace(/\D/g, "")}</td>
+                  <td>{order.user ? order.user.name : "DELETED USER"}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
-                  <td>{order.totalPrice.toFixed(2)}</td>
-                  <td>{order.isPaid ? order.paidAt.substring(0, 10) : 'No'}</td>
-                  {/* <td>{order.isPaid ? order.paidAt.substring(0, 10) : 'No'}</td> */}
-                  <td>
+                  <td>{numberWithCommas(order.totalPrice.toFixed(2))}</td>
+                  <td
+                    className={
+                      order.isPaid || order.isDelivered ? "green" : "red"
+                    }
+                  >
+                    {isPaid(order)}
+                  </td>
+
+                  <td className={order.isDelivered ? "green" : "red"}>
                     {order.isDelivered
                       ? order.deliveredAt.substring(0, 10)
-                      : 'No'}
+                      : "No"}
                   </td>
                   <td>
-                    {order.isShipped ? order.shippedAt.substring(0, 10) : 'No'}
+                    {order.isShipped ? order.shippedAt.substring(0, 10) : "No"}
                   </td>
                   <td>
                     <Button

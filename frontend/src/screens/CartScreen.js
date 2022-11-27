@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 export default function CartScreen() {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export default function CartScreen() {
   };
   const removeItemHandler = (item) => {
     ctxDispatch({ type: 'CART_REMOVE_ITEM', payload: item });
+    toast.success('Product removed from cart');
   };
 
   const checkoutHandler = () => {
@@ -34,6 +36,8 @@ export default function CartScreen() {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
+  const link = `/product`;
+  const link2 = `/newproduct`;
 
   return (
     <Container className="mt-3">
@@ -59,7 +63,7 @@ export default function CartScreen() {
                           alt={item.name}
                           className="img-fluid rounded img-thumbnail"
                         ></img>{' '}
-                        <Link to={`/product/${item.slug}`}>{item.name}</Link>
+                        {item.name}
                       </Col>
                       <Col md={3}>
                         <Button
@@ -123,6 +127,11 @@ export default function CartScreen() {
                         Proceed to Checkout
                       </Button>
                     </div>
+                  </ListGroup.Item>
+                  <ListGroup.Item>
+                    <MessageBox variant="primary">
+                      <Link to="/">Go back to shop</Link>
+                    </MessageBox>
                   </ListGroup.Item>
                 </ListGroup>
               </Card.Body>

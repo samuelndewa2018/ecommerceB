@@ -12,6 +12,10 @@
 .Contactheading {
   font-size: 20px;
 }
+.contact .heading {
+  display: flex;
+  justify-content: center;
+}
 .contact .Contactsrow .contactInfo .box {
   position: relative;
   padding: 5px 0;

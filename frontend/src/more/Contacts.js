@@ -1,20 +1,20 @@
-import React from 'react';
-import axios from 'axios';
-import { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import Button from 'react-bootstrap/Button';
-import './Contacts.css';
+import React from "react";
+import axios from "axios";
+import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import Button from "react-bootstrap/Button";
+import "./Contacts.css";
 
 const Contacts = () => {
-  const [email, setEmail] = useState('');
-  const [name, setName] = useState('');
-  const [subject, setSubject] = useState('');
-  const [message, setMessage] = useState('');
+  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
   const [looading, setLooading] = useState(false);
   const submitHandler = async (e) => {
     e.preventDefault();
     if (!name || !email || !subject || !message) {
-      return toast.error('Please fill your name, email, subject and message');
+      return toast.error("Please fill your name, email, subject and message");
     }
     try {
       setLooading(true);
@@ -26,7 +26,7 @@ const Contacts = () => {
       });
       setLooading(false);
       toast.success(data.message);
-      document.getElementById('myForm').reset();
+      document.getElementById("myForm").reset();
     } catch (err) {
       setLooading(false);
       toast.error(
@@ -40,7 +40,7 @@ const Contacts = () => {
     <>
       <section className="contact" id="contact">
         <h1 className="heading">
-          <span> contact </span> us
+          <span> contact us</span>
         </h1>
 
         <div className="Contactsrow">
@@ -61,7 +61,7 @@ const Contacts = () => {
                 </svg>
               </div>
               <div className="text">
-                <h3>Address</h3>
+                <h5>Address</h5>
                 <p>
                   Nairobi, Kenya, <br />
                   Kahawa Sukari, Baringo Road
@@ -86,7 +86,7 @@ const Contacts = () => {
                 </svg>
               </div>
               <div className="text">
-                <h3>Phone</h3>
+                <h5>Phone</h5>
                 <p>+254712012113</p>
               </div>
             </div>
@@ -104,7 +104,7 @@ const Contacts = () => {
                 </svg>
               </div>
               <div className="text">
-                <h3>Email</h3>
+                <h5>Email</h5>
                 <p>ec-web@example.com</p>
               </div>
             </div>
@@ -123,13 +123,13 @@ const Contacts = () => {
                 </svg>
               </div>
               <div className="text">
-                <h3>Opening Hours</h3>
+                <h5>Opening Hours</h5>
                 <p>10:00-18:00, Mon-Sat</p>
               </div>
             </div>
           </div>
           <form action="" id="myForm" onSubmit={submitHandler}>
-            <h2 className="Contactheading">Send us message...</h2>
+            <h2 className="Contactheading">Send us message ...</h2>
             <input
               type="text"
               placeholder="Your Name..."
@@ -167,7 +167,7 @@ const Contacts = () => {
               onClick={submitHandler}
               disabled={looading}
             >
-              {looading ? 'Loading...' : 'Submit'}{' '}
+              {looading ? "Loading..." : "Submit"}{" "}
             </Button>
           </form>
         </div>

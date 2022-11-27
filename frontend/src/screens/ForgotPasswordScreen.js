@@ -1,47 +1,90 @@
-import Axios from 'axios';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import { Helmet } from 'react-helmet-async';
-import { useContext, useEffect, useState } from 'react';
-import { Store } from '../Store';
-import { toast } from 'react-toastify';
-import { getError } from '../utils';
+import { Link } from "react-router-dom";
+import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { Helmet } from "react-helmet-async";
+import axios from "axios";
+import { useState, useReducer } from "react";
+import { toast } from "react-toastify";
+
+const reducer = (state = {}, action) => {
+  switch (action.type) {
+    case "FORGOT_PASSWORD_REQUEST":
+    case "RESET_PASSWORD_REQUEST":
+      return {
+        ...state,
+        loading: true,
+        error: null,
+      };
+    case "FORGOT_PASSWORD_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        message: action.payload,
+      };
+
+    case "RESET_PASSWORD_SUCCESS":
+      return {
+        ...state,
+        loading: false,
+        success: action.payload,
+      };
+
+    case "FORGOT_PASSWORD_FAIL":
+    case "RESET_PASSWORD_FAIL":
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+
+    case "CLEAR_ERRORS":
+      return {
+        ...state,
+        error: null,
+      };
+
+    default:
+      return state;
+  }
+};
 
 export default function ForgotPasswordScreen() {
-  const navigate = useNavigate();
-  const { search } = useLocation();
-  const redirectInUrl = new URLSearchParams(search).get('redirect');
-  const redirect = redirectInUrl ? redirectInUrl : '/';
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
 
-  const { state, dispatch: ctxDispatch } = useContext(Store);
-  const { userInfo } = state;
+  const [loading, setLoading] = useState(false);
+  const [{ looading }, dispatch] = useReducer(reducer, {
+    loading: false,
+  });
   const submitHandler = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    if (!email) {
+      return toast.error("Please enter your email");
+    }
     try {
-      const { data } = await Axios.post('/api/users/signin', {
+      setLoading(true);
+      dispatch({ type: "RESET_PASSWORD_REQUEST" });
+
+      const { data } = await axios.post(`api/users/forgot`, {
         email,
-        password,
+      });
+      dispatch({ type: "FORGOT_PASSWORD_SUCCESS", payload: data.message });
+
+      setLoading(false);
+      toast.success(data.message);
+    } catch (err) {
+      dispatch({
+        type: "FORGOT_PASSWORD_FAIL",
+        payload: err.response.data.message,
       });
       setLoading(false);
-      ctxDispatch({ type: 'USER_SIGNIN', payload: data });
-      localStorage.setItem('userInfo', JSON.stringify(data));
-      navigate(redirect || '/');
-    } catch (err) {
-      toast.error(getError(err));
+      toast.error(
+        err.response && err.response.data.message
+          ? err.response.data.message
+          : err.message
+      );
     }
   };
-
-  useEffect(() => {
-    if (userInfo) {
-      navigate(redirect);
-    }
-  }, [navigate, redirect, userInfo]);
 
   return (
     <Container className="mt-3">
@@ -62,12 +105,11 @@ export default function ForgotPasswordScreen() {
 
           <div className="mb-3">
             <Button type="submit" disable={loading}>
-              Submit
+              {loading ? "Submiting..." : "Submit"}
             </Button>
           </div>
           <div className="mb-3">
-            Remembered Password?{' '}
-            <Link to={`/signin?redirect=${redirect}`}>Sign In</Link>
+            Remembered Password? <Link to={`/signin`}>Sign In</Link>
           </div>
         </Form>
       </Container>

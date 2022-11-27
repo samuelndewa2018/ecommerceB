@@ -1,57 +1,57 @@
-import axios from 'axios';
-import React, { useContext, useEffect, useReducer } from 'react';
-import { Helmet } from 'react-helmet-async';
-import { useNavigate, useParams } from 'react-router-dom';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup';
-import Card from 'react-bootstrap/Card';
-import { Link } from 'react-router-dom';
-import LoadingBox from '../components/LoadingBox';
-import MessageBox from '../components/MessageBox';
-import { Store } from '../Store';
-import { getError } from '../utils';
-import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
-import { toast } from 'react-toastify';
-import Container from 'react-bootstrap/Container';
-import moment from 'moment';
-import Button from 'react-bootstrap/Button';
+import axios from "axios";
+import React, { useContext, useEffect, useReducer } from "react";
+import { Helmet } from "react-helmet-async";
+import { useNavigate, useParams } from "react-router-dom";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import ListGroup from "react-bootstrap/ListGroup";
+import Card from "react-bootstrap/Card";
+import { Link } from "react-router-dom";
+import LoadingBox from "../components/LoadingBox";
+import MessageBox from "../components/MessageBox";
+import { Store } from "../Store";
+import { getError } from "../utils";
+import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
+import { toast } from "react-toastify";
+import Container from "react-bootstrap/Container";
+import moment from "moment";
+import Button from "react-bootstrap/Button";
 
 function reducer(state, action) {
   switch (action.type) {
-    case 'FETCH_REQUEST':
-      return { ...state, loading: true, error: '' };
-    case 'FETCH_SUCCESS':
-      return { ...state, loading: false, order: action.payload, error: '' };
-    case 'FETCH_FAIL':
+    case "FETCH_REQUEST":
+      return { ...state, loading: true, error: "" };
+    case "FETCH_SUCCESS":
+      return { ...state, loading: false, order: action.payload, error: "" };
+    case "FETCH_FAIL":
       return { ...state, loading: false, error: action.payload };
-    case 'PAY_REQUEST':
+    case "PAY_REQUEST":
       return { ...state, loadingPay: true };
-    case 'PAY_SUCCESS':
+    case "PAY_SUCCESS":
       return { ...state, loadingPay: false, successPay: true };
-    case 'PAY_FAIL':
+    case "PAY_FAIL":
       return { ...state, loadingPay: false };
-    case 'PAY_RESET':
+    case "PAY_RESET":
       return { ...state, loadingPay: false, successPay: false };
-    case 'DELIVER_REQUEST':
+    case "DELIVER_REQUEST":
       return { ...state, loadingDeliver: true };
-    case 'DELIVER_SUCCESS':
+    case "DELIVER_SUCCESS":
       return { ...state, loadingDeliver: false, successDeliver: true };
-    case 'DELIVER_FAIL':
+    case "DELIVER_FAIL":
       return { ...state, loadingDeliver: false };
-    case 'DELIVER_RESET':
+    case "DELIVER_RESET":
       return {
         ...state,
         loadingDeliver: false,
         successDeliver: false,
       };
-    case 'SHIP_REQUEST':
+    case "SHIP_REQUEST":
       return { ...state, loadingShipped: true };
-    case 'SHIP_SUCCESS':
+    case "SHIP_SUCCESS":
       return { ...state, loadingShipped: false, successShipped: true };
-    case 'SHIP_FAIL':
+    case "SHIP_FAIL":
       return { ...state, loadingShipped: false };
-    case 'SHIP_RESET':
+    case "SHIP_RESET":
       return {
         ...state,
         loadingShipped: false,
@@ -85,7 +85,7 @@ export default function OrderScreen() {
   ] = useReducer(reducer, {
     loading: true,
     order: {},
-    error: '',
+    error: "",
     successPay: false,
     loadingPay: false,
   });
@@ -108,7 +108,7 @@ export default function OrderScreen() {
   function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
       try {
-        dispatch({ type: 'PAY_REQUEST' });
+        dispatch({ type: "PAY_REQUEST" });
         const { data } = await axios.put(
           `/api/orders/${order._id}/pay`,
           details,
@@ -116,10 +116,10 @@ export default function OrderScreen() {
             headers: { authorization: `Bearer ${userInfo.token}` },
           }
         );
-        dispatch({ type: 'PAY_SUCCESS', payload: data });
-        toast.success('Yor Order has been received and Payment Confirmed');
+        dispatch({ type: "PAY_SUCCESS", payload: data });
+        toast.success("Yor Order has been received and Payment Confirmed");
       } catch (err) {
-        dispatch({ type: 'PAY_FAIL', payload: getError(err) });
+        dispatch({ type: "PAY_FAIL", payload: getError(err) });
         toast.error(getError(err));
       }
     });
@@ -130,18 +130,18 @@ export default function OrderScreen() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        dispatch({ type: 'FETCH_REQUEST' });
+        dispatch({ type: "FETCH_REQUEST" });
         const { data } = await axios.get(`/api/orders/${orderId}`, {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
-        dispatch({ type: 'FETCH_SUCCESS', payload: data });
+        dispatch({ type: "FETCH_SUCCESS", payload: data });
       } catch (err) {
-        dispatch({ type: 'FETCH_FAIL', payload: getError(err) });
+        dispatch({ type: "FETCH_FAIL", payload: getError(err) });
       }
     };
 
     if (!userInfo) {
-      return navigate('/login');
+      return navigate("/login");
     }
     if (
       !order._id ||
@@ -151,27 +151,27 @@ export default function OrderScreen() {
     ) {
       fetchOrder();
       if (successPay) {
-        dispatch({ type: 'PAY_RESET' });
+        dispatch({ type: "PAY_RESET" });
       }
       if (successDeliver) {
-        dispatch({ type: 'DELIVER_RESET' });
+        dispatch({ type: "DELIVER_RESET" });
       }
       if (successShipped) {
-        dispatch({ type: 'SHIP_RESET' });
+        dispatch({ type: "SHIP_RESET" });
       }
     } else {
       const loadPaypalScript = async () => {
-        const { data: clientId } = await axios.get('/api/keys/paypal', {
+        const { data: clientId } = await axios.get("/api/keys/paypal", {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         paypalDispatch({
-          type: 'resetOptions',
+          type: "resetOptions",
           value: {
-            'client-id': clientId,
-            currency: 'USD',
+            "client-id": clientId,
+            currency: "USD",
           },
         });
-        paypalDispatch({ type: 'setLoadingStatus', value: 'pending' });
+        paypalDispatch({ type: "setLoadingStatus", value: "pending" });
       };
       loadPaypalScript();
     }
@@ -188,7 +188,7 @@ export default function OrderScreen() {
 
   async function deliverOrderHandler() {
     try {
-      dispatch({ type: 'DELIVER_REQUEST' });
+      dispatch({ type: "DELIVER_REQUEST" });
       const { data } = await axios.put(
         `/api/orders/${order._id}/deliver`,
         {},
@@ -196,16 +196,16 @@ export default function OrderScreen() {
           headers: { authorization: `Bearer ${userInfo.token}` },
         }
       );
-      dispatch({ type: 'DELIVER_SUCCESS', payload: data });
-      toast.success('Order is delivered');
+      dispatch({ type: "DELIVER_SUCCESS", payload: data });
+      toast.success("Order is delivered");
     } catch (err) {
       toast.error(getError(err));
-      dispatch({ type: 'DELIVER_FAIL' });
+      dispatch({ type: "DELIVER_FAIL" });
     }
   }
   async function shipOrderHandler() {
     try {
-      dispatch({ type: 'SHIP_REQUEST' });
+      dispatch({ type: "SHIP_REQUEST" });
       const { data } = await axios.put(
         `/api/orders/${order._id}/shipped`,
         {},
@@ -213,15 +213,15 @@ export default function OrderScreen() {
           headers: { authorization: `Bearer ${userInfo.token}` },
         }
       );
-      dispatch({ type: 'SHIP_SUCCESS', payload: data });
-      toast.success('Order is shipped');
+      dispatch({ type: "SHIP_SUCCESS", payload: data });
+      toast.success("Order is shipped");
     } catch (err) {
       toast.error(getError(err));
-      dispatch({ type: 'SHIP_FAIL' });
+      dispatch({ type: "SHIP_FAIL" });
     }
   }
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   return (
     <Container className="mt-3">
@@ -232,41 +232,43 @@ export default function OrderScreen() {
       ) : (
         <div>
           <Helmet>
-            <title>Order {orderId.replace(/\D/g, '')}</title>
+            <title>Order {orderId.replace(/\D/g, "")}</title>
           </Helmet>
-          <h1 className="my-3">Order No. {orderId.replace(/\D/g, '')}</h1>
+          <h1 className="my-3">Order No. {orderId.replace(/\D/g, "")}</h1>
           <Row>
             <Col md={8}>
               <Card className="mb-3">
                 <Card.Body>
                   <Card.Title>Shipping</Card.Title>
                   <Card.Text>
-                    <strong>Name:</strong> {order.shippingAddress.fullName}{' '}
+                    <strong>Name:</strong> {order.shippingAddress.fullName}{" "}
+                    <br />
+                    <strong>Phone:</strong> {order.shippingAddress.postalCode}{" "}
                     <br />
                     <strong>Address: </strong> {order.shippingAddress.address},
-                    {order.shippingAddress.city},{' '}
-                    {order.shippingAddress.postalCode},
-                    {order.shippingAddress.country}
+                    {order.shippingAddress.city}.{" "}
+                    {/* {order.shippingAddress.postalCode},
+                    {order.shippingAddress.country} */}
                   </Card.Text>
-                  {order.isDelivered ? (
-                    <MessageBox variant="success">
-                      Delivered at{' '}
-                      {moment(order.deliveredAt).format(
-                        'dddd, MMMM Do YYYY, h:mm:ss a'
-                      )}
-                    </MessageBox>
-                  ) : (
-                    <MessageBox variant="danger">Not Delivered</MessageBox>
-                  )}
                   {order.isShipped ? (
                     <MessageBox variant="success">
-                      Shipped at{' '}
+                      Shipped on{" "}
                       {moment(order.shippedAt).format(
-                        'dddd, MMMM Do YYYY, h:mm:ss a'
+                        "dddd, MMMM Do YYYY, h:mm:ss a"
                       )}
                     </MessageBox>
                   ) : (
                     <MessageBox variant="danger">Not Shipped</MessageBox>
+                  )}
+                  {order.isDelivered ? (
+                    <MessageBox variant="success">
+                      Delivered at{" "}
+                      {moment(order.deliveredAt).format(
+                        "dddd, MMMM Do YYYY, h:mm:ss a"
+                      )}
+                    </MessageBox>
+                  ) : (
+                    <MessageBox variant="danger">Not Delivered</MessageBox>
                   )}
                 </Card.Body>
                 <Card.Body></Card.Body>
@@ -277,11 +279,11 @@ export default function OrderScreen() {
                   <Card.Text>
                     <strong>Method:</strong> {order.paymentMethod}
                   </Card.Text>
-                  {order.isPaid ? (
+                  {order.isPaid || order.isDelivered ? (
                     <MessageBox variant="success">
-                      Paid at{' '}
+                      Paid at{" "}
                       {moment(order.paidAt).format(
-                        'dddd, MMMM Do YYYY, h:mm:ss a'
+                        "dddd, MMMM Do YYYY, h:mm:ss a"
                       )}
                     </MessageBox>
                   ) : (
@@ -302,7 +304,7 @@ export default function OrderScreen() {
                               src={item.image}
                               alt={item.name}
                               className="img-fluid rounded img-thumbnail"
-                            ></img>{' '}
+                            ></img>{" "}
                             <Link to={`/product/${item.slug}`}>
                               {item.name}
                             </Link>
@@ -335,7 +337,7 @@ export default function OrderScreen() {
                       <Row>
                         <Col>Shipping</Col>
                         <Col>
-                          Ksh.{' '}
+                          Ksh.{" "}
                           {numberWithCommas(order.shippingPrice.toFixed(2))}
                         </Col>
                       </Row>
@@ -344,7 +346,7 @@ export default function OrderScreen() {
                       <Row>
                         <Col>Tax</Col>
                         <Col>
-                          {' '}
+                          {" "}
                           Ksh. {numberWithCommas(order.taxPrice.toFixed(2))}
                         </Col>
                       </Row>
@@ -356,13 +358,13 @@ export default function OrderScreen() {
                         </Col>
                         <Col>
                           <strong>
-                            {' '}
+                            {" "}
                             Ksh. {numberWithCommas(order.totalPrice.toFixed(2))}
                           </strong>
                         </Col>
                       </Row>
                     </ListGroup.Item>
-                    {order.paymentMethod !== 'Delivery' && (
+                    {order.paymentMethod !== "Delivery" && (
                       <div className="mb-3 mt-3 text-center">
                         <strong>Pay Now To Order</strong>
                       </div>
@@ -374,7 +376,7 @@ export default function OrderScreen() {
                           <LoadingBox />
                         ) : (
                           <div>
-                            {order.paymentMethod === 'PayPal' && (
+                            {order.paymentMethod === "PayPal" && (
                               <PayPalButtons
                                 createOrder={createOrder}
                                 onApprove={onApprove}
@@ -391,12 +393,12 @@ export default function OrderScreen() {
                         {loadingShipped && <LoadingBox></LoadingBox>}
                         <div className="d-grid">
                           <Button type="button" onClick={shipOrderHandler}>
-                            Ship Order{' '}
+                            Ship Order{" "}
                           </Button>
                         </div>
                       </ListGroup.Item>
                     )}
-                    {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                    {userInfo.isAdmin && !order.isDelivered && (
                       <ListGroup.Item>
                         {loadingDeliver && <LoadingBox></LoadingBox>}
                         <div className="d-grid">

@@ -1,12 +1,102 @@
-import express from 'express';
-import bcrypt from 'bcryptjs';
-import expressAsyncHandler from 'express-async-handler';
-import User from '../models/userModel.js';
-import { isAuth, isAdmin, generateToken } from '../utils.js';
-import sendMail from '../sendMail.js';
+import express from "express";
+import bcrypt from "bcryptjs";
+import expressAsyncHandler from "express-async-handler";
+import User from "../models/userModel.js";
+import { isAuth, isAdmin, generateToken } from "../utils.js";
+import sendMail from "../sendMail.js";
+
 const userRouter = express.Router();
+
+userRouter.post(
+  "/forgot",
+  expressAsyncHandler(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      res.send({
+        message: "User not found with this email",
+      });
+    }
+    const resetToken = user.getResetPasswordToken();
+    await user.save({
+      validateBeforeSave: false,
+    });
+    const resetPasswordUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/password/reset/${resetToken}`;
+    const message = `Hello Client, \n\n Click the link below to reset your password. \n\n ${resetPasswordUrl}\n\n If you have not requested this email, then please ignore it. \n \n Thank you for shopping with Bramuels`;
+    try {
+      await sendMail({
+        email: user.email,
+        subject: `Inners Password Recovery`,
+        message,
+      });
+
+      res.send({
+        success: true,
+        message: `Email sent. Check your Email to reset your password`,
+      });
+    } catch (error) {
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+
+      await user.save({
+        validateBeforeSave: false,
+      });
+
+      res.send({
+        message: "Error",
+      });
+    }
+  })
+);
+
+// reset password
+userRouter.put(
+  "/password/reset/:token",
+  expressAsyncHandler(async (req, res, next) => {
+    const resetPasswordToken = crypto
+      .createHash("sha256")
+      .update(req.params.token)
+      .digest("hex");
+    const user = await User.findOne({
+      resetPasswordToken,
+      resetPasswordExpire: { $gt: Date.now() },
+    });
+    if (!user) {
+      return next(
+        new ErrorHandler(
+          "Reset password url is invalid or has been expired",
+          400
+        )
+      );
+    }
+    if (req.body.password !== req.body.confirmPassword) {
+      return next(new ErrorHandler("Passwords does not match", 400));
+    }
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+    res.send({
+      message: "Error",
+    });
+  })
+);
+//
+
 userRouter.get(
-  '/:id',
+  "/",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const users = await User.find({});
+    res.send(users);
+  })
+);
+
+userRouter.get(
+  "/:id",
   isAuth,
   isAdmin,
   expressAsyncHandler(async (req, res) => {
@@ -14,13 +104,39 @@ userRouter.get(
     if (user) {
       res.send(user);
     } else {
-      res.status(404).send({ message: 'User Not Found' });
+      res.status(404).send({ message: "User Not Found" });
     }
   })
 );
 
 userRouter.put(
-  '/:id',
+  "/profile",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+    if (user) {
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+      if (req.body.password) {
+        user.password = bcrypt.hashSync(req.body.password, 8);
+      }
+
+      const updatedUser = await user.save();
+      res.send({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+        token: generateToken(updatedUser),
+      });
+    } else {
+      res.status(404).send({ message: "User not found" });
+    }
+  })
+);
+
+userRouter.put(
+  "/:id",
   isAuth,
   isAdmin,
   expressAsyncHandler(async (req, res) => {
@@ -30,32 +146,33 @@ userRouter.put(
       user.email = req.body.email || user.email;
       user.isAdmin = Boolean(req.body.isAdmin);
       const updatedUser = await user.save();
-      res.send({ message: 'User Updated', user: updatedUser });
+      res.send({ message: "User Updated", user: updatedUser });
     } else {
-      res.status(404).send({ message: 'User Not Found' });
+      res.status(404).send({ message: "User Not Found" });
     }
   })
 );
+
 userRouter.delete(
-  '/:id',
+  "/:id",
   isAuth,
   isAdmin,
   expressAsyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
     if (user) {
-      if (user.email === 'admin@example.com') {
-        res.status(400).send({ message: 'Can Not Delete Admin User' });
+      if (user.email === "admin@example.com") {
+        res.status(400).send({ message: "Can Not Delete Admin User" });
         return;
       }
       await user.remove();
-      res.send({ message: 'User Deleted' });
+      res.send({ message: "User Deleted" });
     } else {
-      res.status(404).send({ message: 'User Not Found' });
+      res.status(404).send({ message: "User Not Found" });
     }
   })
 );
 userRouter.post(
-  '/signin',
+  "/signin",
   expressAsyncHandler(async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (user) {
@@ -70,24 +187,16 @@ userRouter.post(
         return;
       }
     }
-    res.status(401).send({ message: 'Invalid email or password' });
+    res.status(401).send({ message: "Invalid email or password" });
   })
 );
-userRouter.get(
-  '/',
-  isAuth,
-  isAdmin,
-  expressAsyncHandler(async (req, res) => {
-    const users = await User.find({});
-    res.send(users);
-  })
-);
+
 userRouter.post(
-  '/signup',
+  "/signup",
   expressAsyncHandler(async (req, res) => {
     const user1 = await User.findOne({ email: req.body.email });
     if (user1) {
-      res.status(401).send({ message: 'Email already has another user.' });
+      res.status(401).send({ message: "Email already has another user." });
     }
     const newUser = new User({
       name: req.body.name,
@@ -108,12 +217,14 @@ userRouter.post(
       isAdmin: user.isAdmin,
       token: generateToken(user),
       sent,
-      message: 'Welcome to Amazona.',
+      message: "Welcome to Amazona.",
     });
   })
 );
+
+//
 userRouter.post(
-  '/contacts',
+  "/contacts",
   expressAsyncHandler(async (req, res) => {
     const { name, email, subject, message } = req.body;
 
@@ -124,33 +235,8 @@ userRouter.post(
     });
     res.send({
       sent,
-      message: 'Email sent. We will reply soon.',
+      message: "Email sent. We will reply soon.",
     });
-  })
-);
-userRouter.put(
-  '/profile',
-  isAuth,
-  expressAsyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id);
-    if (user) {
-      user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
-      if (req.body.password) {
-        user.password = bcrypt.hashSync(req.body.password, 8);
-      }
-
-      const updatedUser = await user.save();
-      res.send({
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        isAdmin: updatedUser.isAdmin,
-        token: generateToken(updatedUser),
-      });
-    } else {
-      res.status(404).send({ message: 'User not found' });
-    }
   })
 );
 

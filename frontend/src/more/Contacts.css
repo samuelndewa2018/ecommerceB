@@ -35,7 +35,7 @@
   justify-content: center;
 }
 .contact .Contactsrow .contactInfo .box .iconi {
-  color: rgb(83, 192, 142);
+  color: #f0c040;
   margin: 14px 2px 14px 14px;
 }
 
@@ -58,7 +58,7 @@
 }
 
 .contact .Contactsrow form .box {
-  padding: 1rem;
+  padding: 0.5rem;
   font-size: 1.1rem;
   color: #333;
   text-transform: none;

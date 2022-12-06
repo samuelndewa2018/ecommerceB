@@ -66,7 +66,7 @@ export default function ForgotPasswordScreen() {
       dispatch({ type: "RESET_PASSWORD_REQUEST" });
 
       const { data } = await axios.post(`api/users/forgot`, {
-        email,
+        email, 
       });
       dispatch({ type: "FORGOT_PASSWORD_SUCCESS", payload: data.message });
 
@@ -94,7 +94,7 @@ export default function ForgotPasswordScreen() {
         </Helmet>
         <h1 className="my-3">Forgot Password</h1>
         <Form onSubmit={submitHandler}>
-          <Form.Group className="mb-3" controlId="email">
+          <Form.Group className="mb-3">
             <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"

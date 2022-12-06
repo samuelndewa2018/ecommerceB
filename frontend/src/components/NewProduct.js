@@ -1,10 +1,11 @@
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import { Link, useNavigate } from 'react-router-dom';
-import Rating from './Rating';
-import axios from 'axios';
-import { useContext } from 'react';
-import { Store } from '../Store';
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import { Link, useNavigate } from "react-router-dom";
+import Rating from "./Rating";
+import axios from "axios";
+import { useContext } from "react";
+import { Store } from "../Store";
+import { toast } from "react-toastify";
 
 function NewProduct(props) {
   const navigate = useNavigate();
@@ -20,17 +21,18 @@ function NewProduct(props) {
     const quantity = existItem ? existItem.quantity + 1 : 1;
     const { data } = await axios.get(`/api/newproducts/${item._id}`);
     if (data.countInStock < quantity) {
-      window.alert('Sorry. Product is out of stock');
+      toast.error("Sorry, product has gone out of stock");
       return;
     }
     ctxDispatch({
-      type: 'CART_ADD_ITEM',
+      type: "CART_ADD_ITEM",
       payload: { ...item, quantity },
     });
-    navigate('/cart');
+    toast.success("Product added in cart");
+    navigate("/cart");
   };
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   return (
     <Card className="ProductCard">
@@ -46,7 +48,18 @@ function NewProduct(props) {
           <Card.Title>{newproduct.name}</Card.Title>
         </Link>
         <Rating rating={newproduct.rating} numReviews={newproduct.numReviews} />
-        <Card.Text>Ksh.{numberWithCommas(newproduct.price)}</Card.Text>
+        <Card.Text>
+          <strong>Ksh.{numberWithCommas(newproduct.price)}</strong>
+        </Card.Text>
+        <Card.Text className="brandColor">
+          (
+          {newproduct.countInStock === 0
+            ? "No product remaining"
+            : newproduct.countInStock === 1
+            ? "1 product remaining"
+            : `${newproduct.countInStock} products remaining`}
+          )
+        </Card.Text>
         {newproduct.countInStock === 0 ? (
           <Button variant="light" disabled>
             Out of stock
@@ -55,7 +68,7 @@ function NewProduct(props) {
           <Button onClick={() => addToCartHandler(newproduct)}>
             Add to cart
           </Button>
-        )}{' '}
+        )}{" "}
       </Card.Body>
     </Card>
   );

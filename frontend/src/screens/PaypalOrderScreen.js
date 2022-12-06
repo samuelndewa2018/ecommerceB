@@ -1,26 +1,26 @@
-import React, { useContext, useEffect, useReducer } from 'react';
-import Axios from 'axios';
-import { Helmet } from 'react-helmet-async';
-import { Link, useNavigate } from 'react-router-dom';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import ListGroup from 'react-bootstrap/ListGroup';
-import { Store } from '../Store';
-import CheckoutSteps from '../components/CheckoutSteps';
-import { toast } from 'react-toastify';
-import { getError } from '../utils';
-import LoadingBox from '../components/LoadingBox';
-import Container from 'react-bootstrap/Container';
+import React, { useContext, useEffect, useReducer } from "react";
+import Axios from "axios";
+import { Helmet } from "react-helmet-async";
+import { Link, useNavigate } from "react-router-dom";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import ListGroup from "react-bootstrap/ListGroup";
+import { Store } from "../Store";
+import CheckoutSteps from "../components/CheckoutSteps";
+import { toast } from "react-toastify";
+import { getError } from "../utils";
+import LoadingBox from "../components/LoadingBox";
+import Container from "react-bootstrap/Container";
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'CREATE_REQUEST':
+    case "CREATE_REQUEST":
       return { ...state, loading: true };
-    case 'CREATE_SUCCESS':
+    case "CREATE_SUCCESS":
       return { ...state, loading: false };
-    case 'CREATE_FAIL':
+    case "CREATE_FAIL":
       return { ...state, loading: false };
     default:
       return state;
@@ -45,10 +45,10 @@ export default function PaypalOrderScreen() {
 
   const placeOrderHandler = async () => {
     try {
-      dispatch({ type: 'CREATE_REQUEST' });
+      dispatch({ type: "CREATE_REQUEST" });
 
       const { data } = await Axios.post(
-        '/api/orders',
+        "/api/orders",
         {
           orderItems: cart.cartItems,
           shippingAddress: cart.shippingAddress,
@@ -57,6 +57,8 @@ export default function PaypalOrderScreen() {
           shippingPrice: cart.shippingPrice,
           taxPrice: cart.taxPrice,
           totalPrice: cart.totalPrice,
+          username: userInfo.name,
+          useremail: userInfo.email,
         },
         {
           headers: {
@@ -64,22 +66,22 @@ export default function PaypalOrderScreen() {
           },
         }
       );
-      ctxDispatch({ type: 'CART_CLEAR' });
-      dispatch({ type: 'CREATE_SUCCESS' });
-      localStorage.removeItem('cartItems');
+      ctxDispatch({ type: "CART_CLEAR" });
+      dispatch({ type: "CREATE_SUCCESS" });
+      localStorage.removeItem("cartItems");
       navigate(`/order/${data.order._id}`);
     } catch (err) {
-      dispatch({ type: 'CREATE_FAIL' });
+      dispatch({ type: "CREATE_FAIL" });
       toast.error(getError(err));
     }
   };
   useEffect(() => {
     if (!cart.paymentMethod) {
-      navigate('/payment');
+      navigate("/payment");
     }
   }, [cart, navigate]);
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   return (
     <Container className="mt-3">
@@ -128,7 +130,7 @@ export default function PaypalOrderScreen() {
                             src={item.image}
                             alt={item.name}
                             className="img-fluid rounded img-thumbnail"
-                          ></img>{' '}
+                          ></img>{" "}
                           <Link to={`/product/${item.slug}`}>{item.name}</Link>
                         </Col>
                         <Col md={3}>
@@ -169,7 +171,7 @@ export default function PaypalOrderScreen() {
                     <Row>
                       <Col>Tax</Col>
                       <Col>
-                        {' '}
+                        {" "}
                         Ksh. {numberWithCommas(cart.taxPrice.toFixed(2))}
                       </Col>
                     </Row>

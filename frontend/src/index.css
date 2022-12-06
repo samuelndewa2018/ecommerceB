@@ -124,6 +124,49 @@ button.thumbnail {
 }
 
 /* ///// */
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+.linkStyles {
+  text-decoration: none;
+}
+.displayFlex {
+  display: flex;
+  margin-bottom: 15px;
+}
+#hide2,
+#hide4,
+#hide6 {
+  display: none;
+}
+#displayNone,
+.displayNone {
+  display: none;
+}
+.FormControleye {
+  display: flex;
+}
+.FormControlInput {
+  position: relative;
+}
+.eye {
+  padding: 6px 10px;
+  position: absolute;
+  margin-left: 35%;
+}
+.brandColor {
+  color: #f0c040;
+}
+.whatsApp {
+  color: #fff !important;
+}
+.ProductCard:hover {
+  box-shadow: 0 0 5px rgba(15, 15, 15, 0.1);
+  transform: translateY(-0.3vmax);
+}
 /* ///////scroll  arrow////// */
 .containerPro {
   position: relative;
@@ -158,15 +201,19 @@ button.thumbnail {
   flex: 1 1 20rem;
 }
 .summary-title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   padding: 1rem;
 }
 .summary-body {
-  font-size: 4rem;
+  font-size: 2rem;
   padding: 1rem;
   text-align: center;
 }
-
+.summary-body2 {
+  font-size: 1.2rem;
+  padding: 1rem;
+  text-align: center;
+}
 .summary-title.color1 {
   background-color: #f0e0e0;
 }
@@ -175,4 +222,12 @@ button.thumbnail {
 }
 .summary-title.color3 {
   background-color: #e0e0f0;
+}
+
+@media (max-width: 768px) {
+  .eye {
+    padding: 10px;
+    position: absolute;
+    margin-left: 72%;
+  }
 }

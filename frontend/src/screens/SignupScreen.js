@@ -54,6 +54,36 @@ export default function SignupScreen() {
     }
   }, [navigate, redirect, userInfo]);
 
+  const seePassword = () => {
+    var x = document.getElementById("myInput");
+    var y = document.getElementById("hide2");
+    var z = document.getElementById("hide1");
+
+    if (x.type === "password") {
+      x.type = "text";
+      y.style.display = "block";
+      z.style.display = "none";
+    } else {
+      x.type = "password";
+      y.style.display = "none";
+      z.style.display = "block";
+    }
+  };
+  const seePassword2 = () => {
+    var x = document.getElementById("myInput2");
+    var y = document.getElementById("hide4");
+    var z = document.getElementById("hide3");
+
+    if (x.type === "password") {
+      x.type = "text";
+      y.style.display = "block";
+      z.style.display = "none";
+    } else {
+      x.type = "password";
+      y.style.display = "none";
+      z.style.display = "block";
+    }
+  };
   return (
     <Container className="mt-3">
       <Container className="small-container">
@@ -64,31 +94,70 @@ export default function SignupScreen() {
         <Form onSubmit={submitHandler}>
           <Form.Group className="mb-3" controlId="name">
             <Form.Label>Name</Form.Label>
-            <Form.Control onChange={(e) => setName(e.target.value)} required />
+            <Form.Control
+              placeholder="name"
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="email">
             <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
+              placeholder="email"
               required
               onChange={(e) => setEmail(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="password">
             <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Form.Group className="mb-3" controlId="confirmPassword">
-              <Form.Label>Confirm Password</Form.Label>
+            <div className="FormControleye">
               <Form.Control
                 type="password"
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                id="myInput"
+                placeholder="password"
+                className="FormControlInput"
                 required
+                onChange={(e) => setPassword(e.target.value)}
               />
+              <span
+                className="eye"
+                onClick={seePassword}
+                style={{ cursor: "ponter" }}
+              >
+                <div id="hide1">
+                  <i className="fa fa-eye"></i>
+                </div>
+                <div id="hide2">
+                  <i className="fa fa-eye-slash"></i>
+                </div>
+              </span>
+            </div>
+            <Form.Group className="mb-3" controlId="confirmPassword">
+              <Form.Label>Confirm Password</Form.Label>
+              <div className="FormControleye">
+                <Form.Control
+                  type="password"
+                  id="myInput2"
+                  placeholder="confirm password"
+                  className="FormControlInput"
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                <span
+                  className="eye"
+                  onClick={seePassword2}
+                  style={{ cursor: "ponter" }}
+                >
+                  <div id="hide3">
+                    <i className="fa fa-eye"></i>
+                  </div>
+                  <div id="hide4">
+                    <i className="fa fa-eye-slash"></i>
+                  </div>
+                </span>
+              </div>
             </Form.Group>
           </Form.Group>
           <div className="mb-3">

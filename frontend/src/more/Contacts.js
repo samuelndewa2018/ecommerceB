@@ -14,26 +14,28 @@ const Contacts = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     if (!name || !email || !subject || !message) {
-      return toast.error("Please fill your name, email, subject and message");
-    }
-    try {
-      setLooading(true);
-      const { data } = await axios.post(`api/users/contacts`, {
-        name,
-        email,
-        subject,
-        message,
-      });
-      setLooading(false);
-      toast.success(data.message);
-      document.getElementById("myForm").reset();
-    } catch (err) {
-      setLooading(false);
-      toast.error(
-        err.response && err.response.data.message
-          ? err.response.data.message
-          : err.message
-      );
+      toast.error("Please fill your name, email, subject and message");
+    } else {
+      try {
+        setLooading(true);
+        const { data } = await axios.post(`api/users/contacts`, {
+          name,
+          email,
+          subject,
+          message,
+        });
+        setLooading(false);
+        toast.success(data.message);
+        document.getElementById("myForm").reset();
+        setMessage("");
+      } catch (err) {
+        setLooading(false);
+        toast.error(
+          err.response && err.response.data.message
+            ? err.response.data.message
+            : err.message
+        );
+      }
     }
   };
   return (
@@ -92,6 +94,27 @@ const Contacts = () => {
             </div>
             <div className="box">
               <div className="iconi">
+                <a href="https://wa.me/+254712012113">
+                  <img
+                    src="/images/whatsapp.png"
+                    alt="whatsapp"
+                    style={{
+                      maxWidth: "25px",
+                      maxHeight: "25px",
+                    }}
+                  />
+                </a>
+              </div>
+              <div className="text">
+                <h5>Whatsapp</h5>
+                <p>
+                  {" "}
+                  <a href="https://wa.me/+254712012113"> +254712012113</a>
+                </p>
+              </div>
+            </div>
+            <div className="box">
+              <div className="iconi">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="25"
@@ -124,7 +147,10 @@ const Contacts = () => {
               </div>
               <div className="text">
                 <h5>Opening Hours</h5>
-                <p>10:00-18:00, Mon-Sat</p>
+                <p>
+                  10:00-18:00, Mon-Sat <br />{" "}
+                  <span style={{ color: "#f0c040" }}>sunday - online</span>
+                </p>
               </div>
             </div>
           </div>
@@ -167,12 +193,11 @@ const Contacts = () => {
               onClick={submitHandler}
               disabled={looading}
             >
-              {looading ? "Loading..." : "Submit"}{" "}
+              {looading ? "Sending..." : "Send"}{" "}
             </Button>
           </form>
         </div>
       </section>
-      <ToastContainer position="top-center" limit={1} />
     </>
   );
 };

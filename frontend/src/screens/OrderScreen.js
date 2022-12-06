@@ -147,6 +147,7 @@ export default function OrderScreen() {
       !order._id ||
       successPay ||
       successDeliver ||
+      successShipped ||
       (order._id && order._id !== orderId)
     ) {
       fetchOrder();
@@ -223,6 +224,9 @@ export default function OrderScreen() {
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+  function productLink(item) {
+    return `/product/${item.slug}`;
+  }
   return (
     <Container className="mt-3">
       {loading ? (
@@ -241,14 +245,17 @@ export default function OrderScreen() {
                 <Card.Body>
                   <Card.Title>Shipping</Card.Title>
                   <Card.Text>
-                    <strong>Name:</strong> {order.shippingAddress.fullName}{" "}
-                    <br />
+                    <strong>Name:</strong> {order.shippingAddress.fullName}(
+                    {order.username}) <br />
                     <strong>Phone:</strong> {order.shippingAddress.postalCode}{" "}
                     <br />
+                    <strong>Email:</strong> {order.useremail} <br />
                     <strong>Address: </strong> {order.shippingAddress.address},
-                    {order.shippingAddress.city}.{" "}
-                    {/* {order.shippingAddress.postalCode},
-                    {order.shippingAddress.country} */}
+                    {order.shippingAddress.city}. <br />
+                    <strong>Ordered On: </strong>{" "}
+                    {moment(order.createdAt).format(
+                      "dddd, MMMM Do YYYY, h:mm:ss a"
+                    )}
                   </Card.Text>
                   {order.isShipped ? (
                     <MessageBox variant="success">
@@ -305,9 +312,7 @@ export default function OrderScreen() {
                               alt={item.name}
                               className="img-fluid rounded img-thumbnail"
                             ></img>{" "}
-                            <Link to={`/product/${item.slug}`}>
-                              {item.name}
-                            </Link>
+                            <Link to={productLink(item)}>{item.name}</Link>
                           </Col>
                           <Col md={3}>
                             <span>{item.quantity}</span>
@@ -317,6 +322,47 @@ export default function OrderScreen() {
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
+                </Card.Body>
+              </Card>
+              <Card className="mb-3">
+                <Card.Body>
+                  <Card.Title>Order Queries</Card.Title>
+                  <Card.Text>
+                    <p>Have problem(s) with your order?</p>
+                    <strong>
+                      {" "}
+                      <i
+                        className="fa fa-phone"
+                        style={{ padding: "5px 10px", color: "#f0c040" }}
+                      ></i>
+                      Call Us:
+                    </strong>{" "}
+                    0712012113 <br />
+                    <strong>
+                      <i
+                        className="fa fa-envelope"
+                        style={{ padding: "5px 10px", color: "#f0c040" }}
+                      />{" "}
+                      Email Us:
+                    </strong>{" "}
+                    <Link to="/contacts">email us here</Link>
+                    <br />
+                    <strong>
+                      <a href="https://wa.me/+254712012113">
+                        <img
+                          src="/images/whatsapp.png"
+                          alt="whatsapp"
+                          style={{
+                            margin: "5px 8px",
+                            maxWidth: "25px",
+                            maxHeight: "25px",
+                          }}
+                        />
+                      </a>
+                      Whatsapp Us:
+                    </strong>{" "}
+                    <a href="https://wa.me/+254712012113"> +254712012113</a>
+                  </Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -366,13 +412,13 @@ export default function OrderScreen() {
                     </ListGroup.Item>
                     {order.paymentMethod !== "Delivery" && (
                       <div className="mb-3 mt-3 text-center">
-                        <strong>Pay Now To Order</strong>
+                        <strong>{!order.isPaid && "Pay Now To Order"}</strong>
                       </div>
                     )}
 
                     {!order.isPaid && (
                       <ListGroup.Item>
-                        {isPending ? (
+                        {isPending && !order.paymentMethod === "Delivery" ? (
                           <LoadingBox />
                         ) : (
                           <div>

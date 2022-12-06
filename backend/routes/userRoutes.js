@@ -4,6 +4,7 @@ import expressAsyncHandler from "express-async-handler";
 import User from "../models/userModel.js";
 import { isAuth, isAdmin, generateToken } from "../utils.js";
 import sendMail from "../sendMail.js";
+import crypto from "crypto";
 
 const userRouter = express.Router();
 
@@ -12,27 +13,25 @@ userRouter.post(
   expressAsyncHandler(async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) {
-      res.send({
-        message: "User not found with this email",
-      });
+      res.status(401).send({ message: "User not found with this email" });
     }
     const resetToken = user.getResetPasswordToken();
+
     await user.save({
       validateBeforeSave: false,
     });
     const resetPasswordUrl = `${req.protocol}://${req.get(
       "host"
     )}/password/reset/${resetToken}`;
-    const message = `Hello Client, \n\n Click the link below to reset your password. \n\n ${resetPasswordUrl}\n\n If you have not requested this email, then please ignore it. \n \n Thank you for shopping with Bramuels`;
+    const message = `Hello ${user.name}, \n\n Someone has requested to reset password for your Amazona Account, If that is you click the link below to reset your password. \n\n ${resetPasswordUrl}\n\n If you have not requested this email, then please ignore and DO NOT share it. \n \n Thank you for shopping with Amazona`;
     try {
       await sendMail({
         email: user.email,
-        subject: `Inners Password Recovery`,
+        subject: `Amazona Password Recovery`,
         message,
       });
 
       res.send({
-        success: true,
         message: `Email sent. Check your Email to reset your password`,
       });
     } catch (error) {
@@ -42,9 +41,10 @@ userRouter.post(
       await user.save({
         validateBeforeSave: false,
       });
+      console.log(error);
 
       res.send({
-        message: "Error",
+        message: "Error Occured",
       });
     }
   })
@@ -53,34 +53,41 @@ userRouter.post(
 // reset password
 userRouter.put(
   "/password/reset/:token",
-  expressAsyncHandler(async (req, res, next) => {
-    const resetPasswordToken = crypto
-      .createHash("sha256")
-      .update(req.params.token)
-      .digest("hex");
-    const user = await User.findOne({
-      resetPasswordToken,
-      resetPasswordExpire: { $gt: Date.now() },
-    });
-    if (!user) {
-      return next(
-        new ErrorHandler(
-          "Reset password url is invalid or has been expired",
-          400
-        )
-      );
-    }
-    if (req.body.password !== req.body.confirmPassword) {
-      return next(new ErrorHandler("Passwords does not match", 400));
-    }
-    user.password = req.body.password;
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
+  expressAsyncHandler(async (req, res) => {
+    try {
+      const resetPasswordToken = crypto
+        .createHash("sha256")
+        .update(req.params.token)
+        .digest("hex");
+      const user = await User.findOne({
+        resetPasswordToken,
+        resetPasswordExpire: { $gt: Date.now() },
+      });
+      if (!user) {
+        return res
+          .status(404)
+          .send({ message: "Invalid or expired Token/url" });
+      }
+      if (req.body.password) {
+        user.password = bcrypt.hashSync(req.body.password, 8);
+      }
 
-    await user.save();
-    res.send({
-      message: "Error",
-    });
+      const updatedUser = await user.save();
+      res.send({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+        token: generateToken(updatedUser),
+      });
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpire = undefined;
+      return;
+
+      // await user.save();
+    } catch (error) {
+      console.log(error);
+    }
   })
 );
 //
@@ -113,24 +120,28 @@ userRouter.put(
   "/profile",
   isAuth,
   expressAsyncHandler(async (req, res) => {
-    const user = await User.findById(req.user._id);
-    if (user) {
-      user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
-      if (req.body.password) {
-        user.password = bcrypt.hashSync(req.body.password, 8);
-      }
+    try {
+      const user = await User.findById(req.user._id);
+      if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        if (req.body.password) {
+          user.password = bcrypt.hashSync(req.body.password, 8);
+        }
 
-      const updatedUser = await user.save();
-      res.send({
-        _id: updatedUser._id,
-        name: updatedUser.name,
-        email: updatedUser.email,
-        isAdmin: updatedUser.isAdmin,
-        token: generateToken(updatedUser),
-      });
-    } else {
-      res.status(404).send({ message: "User not found" });
+        const updatedUser = await user.save();
+        res.send({
+          _id: updatedUser._id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          isAdmin: updatedUser.isAdmin,
+          token: generateToken(updatedUser),
+        });
+      } else {
+        res.status(404).send({ message: "User not found" });
+      }
+    } catch (error) {
+      res.status(404).send({ message: "Another user has such email" });
     }
   })
 );
@@ -222,6 +233,31 @@ userRouter.post(
   })
 );
 
+userRouter.put(
+  "/change/password",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+    if (user) {
+      if (bcrypt.compareSync(req.body.oldpassword, user.password)) {
+        if (req.body.newpassword) {
+          user.password = bcrypt.hashSync(req.body.newpassword, 8);
+        }
+
+        const updatedUser = await user.save();
+        res.send({
+          _id: updatedUser._id,
+          name: updatedUser.name,
+          email: updatedUser.email,
+          isAdmin: updatedUser.isAdmin,
+          token: generateToken(updatedUser),
+        });
+        return;
+      }
+    }
+    res.status(401).send({ message: "Incorrect old password" });
+  })
+);
 //
 userRouter.post(
   "/contacts",
@@ -230,8 +266,8 @@ userRouter.post(
 
     const sent = await sendMail({
       email: `samuelndewa2018@gmail.com`,
-      subject: `Contact Us or Report Us`,
-      message: ` Hello Amazona,\n ${name}, of email ${email} and number ${subject} says:  ${message}`,
+      subject: `Contact Us`,
+      message: ` Hello Amazona,\n${name}, of email ${email} and number ${subject} says:\n${message}`,
     });
     res.send({
       sent,

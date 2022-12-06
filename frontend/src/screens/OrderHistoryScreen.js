@@ -60,9 +60,13 @@ export default function OrderHistoryScreen() {
     if (order.isDelivered) {
       return order.deliveredAt.substring(0, 10);
     } else {
-      return "No";
+      return "Not Paid";
     }
   }
+  // sorting orders
+  const orderSortedDate = orders?.slice(0);
+  orderSortedDate?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
   return (
     <Container className="mt-3">
       <div>
@@ -89,21 +93,27 @@ export default function OrderHistoryScreen() {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
+              {orderSortedDate.map((order) => (
                 <tr key={order._id}>
                   <td>{order._id.replace(/\D/g, "")}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
                   <td> {numberWithCommas(order.totalPrice.toFixed(2))}</td>
-                  <td className={order.isPaid || order.isDelivered ? "green" : "red"}>
+                  <td
+                    className={
+                      order.isPaid || order.isDelivered ? "green" : "red"
+                    }
+                  >
                     {isPaid(order)}
                   </td>
                   <td className={order.isDelivered ? "green" : "red"}>
                     {order.isDelivered
                       ? order.deliveredAt.substring(0, 10)
-                      : "No"}
+                      : "Not Delivered"}
                   </td>
-                  <td>
-                    {order.isShipped ? order.shippedAt.substring(0, 10) : "No"}
+                  <td className={order.isShipped ? "green" : "red"}>
+                    {order.isShipped
+                      ? order.shippedAt.substring(0, 10)
+                      : "Not Shipped"}
                   </td>
                   <td>
                     <Button

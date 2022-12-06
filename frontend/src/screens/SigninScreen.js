@@ -46,6 +46,21 @@ export default function SigninScreen() {
     }
   }, [navigate, redirect, userInfo]);
 
+  const seePassword = () => {
+    var x = document.getElementById("myInput");
+    var y = document.getElementById("hide2");
+    var z = document.getElementById("hide1");
+
+    if (x.type === "password") {
+      x.type = "text";
+      y.style.display = "block";
+      z.style.display = "none";
+    } else {
+      x.type = "password";
+      y.style.display = "none";
+      z.style.display = "block";
+    }
+  };
   return (
     <Container className="mt-3">
       <Container className="small-container">
@@ -58,22 +73,43 @@ export default function SigninScreen() {
             <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
+              placeholder="email"
               required
               onChange={(e) => setEmail(e.target.value)}
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="password">
             <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="FormControleye">
+              <Form.Control
+                type="password"
+                id="myInput"
+                placeholder="password"
+                className="FormControlInput"
+                required
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <span
+                className="eye"
+                onClick={seePassword}
+                style={{ cursor: "ponter" }}
+              >
+                <div id="hide1">
+                  <i className="fa fa-eye"></i>
+                </div>
+                <div id="hide2">
+                  <i className="fa fa-eye-slash"></i>
+                </div>
+              </span>
+            </div>
           </Form.Group>
           <div className="mb-3">
             <Button type="submit" disable={loading}>
               {loading ? "Signing..." : "Sign In"}
             </Button>
+          </div>
+          <div className="mb-3">
+            Forgot password? <Link to="/forgot">Forgot password</Link>
           </div>
           <div className="mb-3">
             New customer?{" "}

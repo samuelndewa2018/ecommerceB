@@ -100,6 +100,9 @@ export default function OrderListScreen() {
       return "No";
     }
   }
+  // sorting orders
+  const orderSortedDate = orders?.slice(0);
+  orderSortedDate?.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
 
   return (
     <Container className="mt-3">
@@ -118,17 +121,17 @@ export default function OrderListScreen() {
             <thead>
               <tr>
                 <th>Order No.</th>
-                <th>USER</th>
-                <th>DATE</th>
-                <th>TOTAL</th>
-                <th>PAID</th>
-                <th>DELIVERED</th>
-                <th>SHIPPED</th>
-                <th>ACTIONS</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Totals</th>
+                <th>Paid</th>
+                <th>Delivered</th>
+                <th>Shipped</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {orders.map((order) => (
+              {orderSortedDate.map((order) => (
                 <tr key={order._id}>
                   <td>{order._id.replace(/\D/g, "")}</td>
                   <td>{order.user ? order.user.name : "DELETED USER"}</td>
@@ -147,7 +150,7 @@ export default function OrderListScreen() {
                       ? order.deliveredAt.substring(0, 10)
                       : "No"}
                   </td>
-                  <td>
+                  <td className={order.isShipped ? "green" : "red"}>
                     {order.isShipped ? order.shippedAt.substring(0, 10) : "No"}
                   </td>
                   <td>

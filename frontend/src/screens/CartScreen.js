@@ -1,16 +1,16 @@
-import { useContext } from 'react';
-import { Store } from '../Store';
-import { Helmet } from 'react-helmet-async';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import MessageBox from '../components/MessageBox';
-import ListGroup from 'react-bootstrap/ListGroup';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import { useContext } from "react";
+import { Store } from "../Store";
+import { Helmet } from "react-helmet-async";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import MessageBox from "../components/MessageBox";
+import ListGroup from "react-bootstrap/ListGroup";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function CartScreen() {
   const navigate = useNavigate();
@@ -20,21 +20,33 @@ export default function CartScreen() {
   } = state;
 
   const updateCartHandler = async (item, quantity) => {
+    if (item.quantity === 2) {
+      toast.error("You have reached manimum stock");
+    }
     ctxDispatch({
-      type: 'CART_ADD_ITEM',
+      type: "CART_ADD_ITEM",
+      payload: { ...item, quantity },
+    });
+  };
+  const updateCartHandler2 = async (item, quantity) => {
+    if (item.quantity === item.countInStock - 1) {
+      toast.error("You have reached maximum stock");
+    }
+    ctxDispatch({
+      type: "CART_ADD_ITEM",
       payload: { ...item, quantity },
     });
   };
   const removeItemHandler = (item) => {
-    ctxDispatch({ type: 'CART_REMOVE_ITEM', payload: item });
-    toast.success('Product removed from cart');
+    ctxDispatch({ type: "CART_REMOVE_ITEM", payload: item });
+    toast.success("Product removed from cart");
   };
 
   const checkoutHandler = () => {
-    navigate('/signin?redirect=/shipping');
+    navigate("/signin?redirect=/shipping");
   };
   function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   const link = `/product`;
   const link2 = `/newproduct`;
@@ -50,7 +62,9 @@ export default function CartScreen() {
           <Col md={8}>
             {cartItems.length === 0 ? (
               <MessageBox>
-                Your Cart is empty. <Link to="/">Go Shopping</Link>
+                Your Cart <i className="fa fa-shopping-cart"></i> is empty.
+                {"  "}
+                <Link to="/"> Go Shopping</Link>
               </MessageBox>
             ) : (
               <ListGroup>
@@ -62,8 +76,8 @@ export default function CartScreen() {
                           src={item.image}
                           alt={item.name}
                           className="img-fluid rounded img-thumbnail"
-                        ></img>{' '}
-                        {item.name}
+                        ></img>{" "}
+                        <Link to={`/product/${item.slug}`}>{item.name}</Link>
                       </Col>
                       <Col md={3}>
                         <Button
@@ -73,15 +87,15 @@ export default function CartScreen() {
                           variant="light"
                           disabled={item.quantity === 1}
                         >
-                          {' '}
+                          {" "}
                           <i className="fas fa-minus-circle"></i>
-                        </Button>{' '}
-                        <span>{item.quantity}</span>{' '}
+                        </Button>{" "}
+                        <span>{item.quantity}</span>{" "}
                         <Button
                           variant="light"
                           disabled={item.quantity === item.countInStock}
                           onClick={() =>
-                            updateCartHandler(item, item.quantity + 1)
+                            updateCartHandler2(item, item.quantity + 1)
                           }
                         >
                           <i className="fas fa-plus-circle"></i>
@@ -93,7 +107,7 @@ export default function CartScreen() {
                           onClick={() => removeItemHandler(item)}
                           variant="light"
                         >
-                          {' '}
+                          {" "}
                           <i className="fas fa-trash"></i>
                         </Button>
                       </Col>
@@ -109,7 +123,7 @@ export default function CartScreen() {
                 <ListGroup variant="flush">
                   <ListGroup.Item>
                     <h3>
-                      Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{' '}
+                      Subtotal ({cartItems.reduce((a, c) => a + c.quantity, 0)}{" "}
                       items) : Ksh.
                       {numberWithCommas(
                         cartItems.reduce((a, c) => a + c.price * c.quantity, 0)
@@ -128,11 +142,15 @@ export default function CartScreen() {
                       </Button>
                     </div>
                   </ListGroup.Item>
-                  <ListGroup.Item>
-                    <MessageBox variant="primary">
-                      <Link to="/">Go back to shop</Link>
-                    </MessageBox>
-                  </ListGroup.Item>
+                  {cartItems.length !== 0 && (
+                    <ListGroup.Item>
+                      <MessageBox variant="primary">
+                        <Link to="/" className="linkStyles">
+                          Go back to shop
+                        </Link>
+                      </MessageBox>
+                    </ListGroup.Item>
+                  )}
                 </ListGroup>
               </Card.Body>
             </Card>

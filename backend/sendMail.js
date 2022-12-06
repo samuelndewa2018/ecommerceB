@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import hbs from "nodemailer-express-handlebars";
 
 const sendMail = async (options) => {
   const transporter = nodemailer.createTransport({
@@ -15,10 +16,24 @@ const sendMail = async (options) => {
     },
   });
 
+  transporter.use(
+    "compile",
+    hbs({
+      options,
+      viewPath: "./views/layouts",
+      viewEngine: "express-handlebars",
+    })
+  );
   const mailOptions = {
     from: process.env.SMPT_MAIL,
     to: options.email,
     subject: options.subject,
+    template: "index",
+    context: {
+      name: "Name",
+      message: options.message,
+    },
+
     text: options.message,
   };
 

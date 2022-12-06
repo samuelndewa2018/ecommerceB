@@ -1,4 +1,4 @@
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Link, Route, Routes, Navigate } from "react-router-dom";
 import HomeScreen from "./screens/HomeScreen";
 import ProductScreen from "./screens/ProductScreen";
 import NewProductScreen from "./screens/NewProductScreen";
@@ -43,6 +43,7 @@ import Footer from "./more/Footer";
 import MpesaOrderScreen from "./screens/MpesaOrderScreen";
 import ForgotPasswordScreen from "./screens/ForgotPasswordScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
+import UserChangePasswordScreen from "./screens/UserChangePasswordScreen";
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store);
@@ -102,6 +103,20 @@ function App() {
                 <SearchBox />
 
                 <Nav className="me-auto  w-100  justify-content-end">
+                  <a href="https://wa.me/+254712012113">
+                    <img
+                      src="/images/whatsapp.png"
+                      alt="whatsapp"
+                      style={{
+                        margin: "8px 0 0",
+                        maxWidth: "25px",
+                        maxHeight: "25px",
+                      }}
+                    />
+                    <Badge pill bg="success">
+                      ?
+                    </Badge>
+                  </a>
                   <Link to="/cart" className="nav-link">
                     Cart
                     {cart.cartItems.length > 0 && (
@@ -109,9 +124,13 @@ function App() {
                         {cart.cartItems.reduce((a, c) => a + c.quantity, 0)}
                       </Badge>
                     )}
+                    <i className="fa fa-whatsapp"></i>
                   </Link>
                   {userInfo ? (
                     <NavDropdown title={userInfo.name} id="basic-nav-dropdown">
+                      <LinkContainer to="/">
+                        <NavDropdown.Item>Home</NavDropdown.Item>
+                      </LinkContainer>
                       <LinkContainer to="/profile">
                         <NavDropdown.Item>User Profile</NavDropdown.Item>
                       </LinkContainer>
@@ -184,6 +203,7 @@ function App() {
         </div>
         <main>
           <Routes>
+            <Route path="/" element={<HomeScreen />} />
             <Route path="/product/:slug" element={<ProductScreen />} />
             <Route path="/newproduct/:slug" element={<NewProductScreen />} />
             <Route path="/cart" element={<CartScreen />} />
@@ -205,6 +225,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ProfileScreen />
+                </ProtectedRoute>
+              }
+            />{" "}
+            <Route
+              path="/change/password"
+              element={
+                <ProtectedRoute>
+                  <UserChangePasswordScreen />
                 </ProtectedRoute>
               }
             />{" "}
@@ -292,7 +320,7 @@ function App() {
                 </AdminRoute>
               }
             ></Route>
-            <Route path="/" element={<HomeScreen />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         </main>
         <footer>

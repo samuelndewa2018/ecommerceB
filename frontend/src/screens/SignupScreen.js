@@ -166,8 +166,10 @@ export default function SignupScreen() {
             </Button>
           </div>
           <div className="mb-3">
-            Already have an account?{" "}
-            <Link to={`/signin?redirect=${redirect}`}>Sign-In</Link>
+            <p style={{ fontSize: "12px", color: "rgb(239 176 113)" }}>
+              Already have an account?{" "}
+              <Link to={`/signin?redirect=${redirect}`}>Sign-In</Link>
+            </p>
           </div>
         </Form>
       </Container>

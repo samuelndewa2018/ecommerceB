@@ -90,12 +90,17 @@
   }
   .contact .Contactsrow .contactInfo {
     width: 100%;
-    padding: 0;
+    padding: 17px;
   }
   .contact .Contactsrow .contactInfo .box {
     padding: 3px 0;
   }
   .contact .Contactsrow .contactInfo .box .iconi {
     margin: 14px 2px 14px 5px;
+  }
+  .contact .Contactsrow form {
+    padding: 1rem 1.5rem;
+    max-width: 100%;
+    flex: 0;
   }
 }

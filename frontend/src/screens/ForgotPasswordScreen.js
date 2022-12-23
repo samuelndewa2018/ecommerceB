@@ -66,7 +66,7 @@ export default function ForgotPasswordScreen() {
       dispatch({ type: "RESET_PASSWORD_REQUEST" });
 
       const { data } = await axios.post(`api/users/forgot`, {
-        email, 
+        email,
       });
       dispatch({ type: "FORGOT_PASSWORD_SUCCESS", payload: data.message });
 
@@ -109,7 +109,9 @@ export default function ForgotPasswordScreen() {
             </Button>
           </div>
           <div className="mb-3">
-            Remembered Password? <Link to={`/signin`}>Sign In</Link>
+            <p style={{ fontSize: "12px", color: "rgb(239 176 113)" }}>
+              Remembered Password? <Link to={`/signin`}>Sign In</Link>
+            </p>
           </div>
         </Form>
       </Container>

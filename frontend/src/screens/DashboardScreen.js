@@ -9,6 +9,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
+import { Link } from "react-router-dom";
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -67,33 +68,37 @@ export default function DashboardScreen() {
             <Row>
               <ul className="row summary" style={{ listStyle: "none" }}>
                 <Col md={4}>
-                  <Card>
-                    <li>
-                      {" "}
-                      <div className="summary-title color1">
-                        <span>
-                          <i className="fa fa-users" /> Users
-                        </span>
-                      </div>
-                      <div className="summary-body">
-                        {summary.users[0].numUsers}
-                      </div>
-                    </li>
-                  </Card>
+                  <Link to="/admin/users" className="linkStyles">
+                    <Card>
+                      <li>
+                        {" "}
+                        <div className="summary-title color1">
+                          <span>
+                            <i className="fa fa-users" /> Users
+                          </span>
+                        </div>
+                        <div className="summary-body">
+                          {summary.users[0].numUsers}
+                        </div>
+                      </li>
+                    </Card>
+                  </Link>
                 </Col>{" "}
                 <Col md={4}>
-                  <Card>
-                    <li>
-                      <div className="summary-title color2">
-                        <span>
-                          <i className="fa fa-shopping-cart" /> Orders
-                        </span>
-                      </div>
-                      <div className="summary-body">
-                        {summary.orders[0] ? summary.orders[0].numOrders : 0}
-                      </div>
-                    </li>
-                  </Card>
+                  <Link to="/admin/orders" className="linkStyles">
+                    <Card>
+                      <li>
+                        <div className="summary-title color2">
+                          <span>
+                            <i className="fa fa-shopping-cart" /> Orders
+                          </span>
+                        </div>
+                        <div className="summary-body">
+                          {summary.orders[0] ? summary.orders[0].numOrders : 0}
+                        </div>
+                      </li>
+                    </Card>
+                  </Link>
                 </Col>{" "}
                 <Col md={4}>
                   <Card>
@@ -126,7 +131,7 @@ export default function DashboardScreen() {
                   width="100%"
                   height="400px"
                   chartType="AreaChart"
-                  loader={<div>Loading Chart...</div>}
+                  loader={<div>Loading Graph...</div>}
                   data={[
                     ["Date", "Sales"],
                     ...summary.dailyOrders.map((x) => [x._id, x.sales]),

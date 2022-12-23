@@ -125,8 +125,8 @@ export default function OrderListScreen() {
                 <th>Date</th>
                 <th>Totals</th>
                 <th>Paid</th>
-                <th>Delivered</th>
                 <th>Shipped</th>
+                <th>Delivered</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -144,15 +144,15 @@ export default function OrderListScreen() {
                   >
                     {isPaid(order)}
                   </td>
-
+                  <td className={order.isShipped ? "green" : "red"}>
+                    {order.isShipped ? order.shippedAt.substring(0, 10) : "No"}
+                  </td>
                   <td className={order.isDelivered ? "green" : "red"}>
                     {order.isDelivered
                       ? order.deliveredAt.substring(0, 10)
                       : "No"}
                   </td>
-                  <td className={order.isShipped ? "green" : "red"}>
-                    {order.isShipped ? order.shippedAt.substring(0, 10) : "No"}
-                  </td>
+
                   <td>
                     <Button
                       type="button"

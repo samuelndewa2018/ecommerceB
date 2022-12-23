@@ -105,6 +105,7 @@ export default function OrderScreen() {
         return orderID;
       });
   }
+
   function onApprove(data, actions) {
     return actions.order.capture().then(async function (details) {
       try {
@@ -112,6 +113,7 @@ export default function OrderScreen() {
         const { data } = await axios.put(
           `/api/orders/${order._id}/pay`,
           details,
+
           {
             headers: { authorization: `Bearer ${userInfo.token}` },
           }
@@ -236,7 +238,7 @@ export default function OrderScreen() {
       ) : (
         <div>
           <Helmet>
-            <title>Order {orderId.replace(/\D/g, "")}</title>
+            <title>Order{orderId.replace(/\D/g, "")}</title>
           </Helmet>
           <h1 className="my-3">Order No. {orderId.replace(/\D/g, "")}</h1>
           <Row>
@@ -348,7 +350,12 @@ export default function OrderScreen() {
                     <Link to="/contacts">email us here</Link>
                     <br />
                     <strong>
-                      <a href="https://wa.me/+254712012113">
+                      <a
+                        href="//wa.me/+254712012113"
+                        target="_blank"
+                        rel="noreferrer"
+                        arial-label="Whatsapp"
+                      >
                         <img
                           src="/images/whatsapp.png"
                           alt="whatsapp"
@@ -361,7 +368,15 @@ export default function OrderScreen() {
                       </a>
                       Whatsapp Us:
                     </strong>{" "}
-                    <a href="https://wa.me/+254712012113"> +254712012113</a>
+                    <a
+                      href="//wa.me/+254712012113"
+                      target="_blank"
+                      rel="noreferrer"
+                      arial-label="Whatsapp"
+                    >
+                      {" "}
+                      +254712012113{" "}
+                    </a>
                   </Card.Text>
                 </Card.Body>
               </Card>
@@ -412,7 +427,11 @@ export default function OrderScreen() {
                     </ListGroup.Item>
                     {order.paymentMethod !== "Delivery" && (
                       <div className="mb-3 mt-3 text-center">
-                        <strong>{!order.isPaid && "Pay Now To Order"}</strong>
+                        <strong>
+                          {!order.isPaid &&
+                            !userInfo.isAdmin &&
+                            "Pay Now To Order"}
+                        </strong>
                       </div>
                     )}
 
@@ -422,13 +441,14 @@ export default function OrderScreen() {
                           <LoadingBox />
                         ) : (
                           <div>
-                            {order.paymentMethod === "PayPal" && (
-                              <PayPalButtons
-                                createOrder={createOrder}
-                                onApprove={onApprove}
-                                onError={onError}
-                              ></PayPalButtons>
-                            )}
+                            {order.paymentMethod === "PayPal" &&
+                              !userInfo.isAdmin && (
+                                <PayPalButtons
+                                  createOrder={createOrder}
+                                  onApprove={onApprove}
+                                  onError={onError}
+                                ></PayPalButtons>
+                              )}
                           </div>
                         )}
                         {loadingPay && <LoadingBox></LoadingBox>}
@@ -444,16 +464,18 @@ export default function OrderScreen() {
                         </div>
                       </ListGroup.Item>
                     )}
-                    {userInfo.isAdmin && !order.isDelivered && (
-                      <ListGroup.Item>
-                        {loadingDeliver && <LoadingBox></LoadingBox>}
-                        <div className="d-grid">
-                          <Button type="button" onClick={deliverOrderHandler}>
-                            Deliver Order
-                          </Button>
-                        </div>
-                      </ListGroup.Item>
-                    )}
+                    {userInfo.isAdmin &&
+                      order.isShipped &&
+                      !order.isDelivered && (
+                        <ListGroup.Item>
+                          {loadingDeliver && <LoadingBox></LoadingBox>}
+                          <div className="d-grid">
+                            <Button type="button" onClick={deliverOrderHandler}>
+                              Deliver Order
+                            </Button>
+                          </div>
+                        </ListGroup.Item>
+                      )}
                   </ListGroup>
                 </Card.Body>
               </Card>

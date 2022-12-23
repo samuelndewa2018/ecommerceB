@@ -36,6 +36,49 @@ orderRouter.post(
     });
 
     const order = await newOrder.save();
+    await sendMail({
+      email: "samuelndewa2018@gmail.com",
+      subject: `Order Confirmation`,
+      message: `Thanks for shopping with us
+      \n\n
+      Hi ${order.username},  
+      \n\n
+      We have finished processing your order.
+      [Order No. ${order._id.toString().replace(/\D/g, "")}] (${order.createdAt
+        .toString()
+        .substring(0, 10)})
+      Product
+      Quantity
+      Price
+  
+      ${order.orderItems
+        .map(
+          (item) => `
+        
+        ${item.name}
+        ${item.quantity}
+        Ksh. ${item.price.toFixed(2)}
+      `
+        )
+        .join("\n")}
+      Items Price:
+       ksh. ${order.itemsPrice.toFixed(2)}
+     Shipping Price:
+       ksh. ${order.shippingPrice.toFixed(2)}
+     
+      Total Price:
+      $${order.totalPrice.toFixed(2)}
+     Payment Method:
+    ${order.paymentMethod}
+      Shipping address
+      ${order.shippingAddress.fullName},
+      ${order.shippingAddress.address},      
+      ${order.shippingAddress.city},<br/>
+      ${order.shippingAddress.postalCode}
+      Thanks for shopping with us.
+     
+      `,
+    });
     res.status(201).send({ message: "New Order Created", order });
   })
 );
@@ -154,6 +197,7 @@ orderRouter.put(
   isAuth,
   expressAsyncHandler(async (req, res) => {
     const order = await Order.findById(req.params.id);
+
     if (order) {
       order.isPaid = true;
       order.paidAt = Date.now();
@@ -168,14 +212,15 @@ orderRouter.put(
       await sendMail({
         email: "samuelndewa2018@gmail.com",
         subject: `Order Confirmation`,
-        message: `<h1>Thanks for shopping with us</h1>
-        <p>
-        Hi ${order.username},</p>
-        <p>We have finished processing your order.</p>
-        <h2>[Order No. ${order._id}] (${order.createdAt
+        message: `Thanks for shopping with us
+        \n
+        Hi ${order.username},  
+        \n
+        We have finished processing your order.
+        [Order No. ${order._id
           .toString()
-          .substring(0, 10)})</h2>
-        <table>
+          .replace(/\D/g, "")}] (${order.createdAt.toString().substring(0, 10)})
+        <table>  
         <thead>
         <tr>
         <td><strong>Product</strong></td>
@@ -218,7 +263,6 @@ orderRouter.put(
         ${order.shippingAddress.fullName},<br/>
         ${order.shippingAddress.address},<br/>
         ${order.shippingAddress.city},<br/>
-        ${order.shippingAddress.country},<br/>
         ${order.shippingAddress.postalCode}<br/>
         </p>
         <hr/>

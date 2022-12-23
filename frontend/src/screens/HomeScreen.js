@@ -60,7 +60,6 @@ function HomeScreen() {
     };
     fetchData();
   }, []);
-  var slider = document.getElementById("slider");
 
   // scrolls
   const slideLeft = () => {

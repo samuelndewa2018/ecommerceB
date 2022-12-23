@@ -51,7 +51,7 @@ function App() {
 
   const signoutHandler = (e) => {
     e.preventDefault();
-    toast.success("Bye! Signed Out.");
+    toast.success("Signed Out. Bye!");
     ctxDispatch({ type: "USER_SIGNOUT" });
     localStorage.removeItem("userInfo");
     localStorage.removeItem("shippingAddress");
@@ -103,7 +103,12 @@ function App() {
                 <SearchBox />
 
                 <Nav className="me-auto  w-100  justify-content-end">
-                  <a href="https://wa.me/+254712012113">
+                  <a
+                    href="//wa.me/+254712012113"
+                    target="_blank"
+                    rel="noreferrer"
+                    arial-label="Whatsapp"
+                  >
                     <img
                       src="/images/whatsapp.png"
                       alt="whatsapp"
@@ -324,8 +329,10 @@ function App() {
           </Routes>
         </main>
         <footer>
-          <div className="text-center">All rights reserved</div>
-          {/* <Footer /> */}
+          <div className="text-center">
+            {" "}
+            <Footer />
+          </div>
         </footer>
       </div>
     </BrowserRouter>

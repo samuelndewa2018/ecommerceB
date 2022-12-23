@@ -87,8 +87,9 @@ export default function OrderHistoryScreen() {
                 <th>Date</th>
                 <th>Total (ksh)</th>
                 <th>Paid</th>
-                <th>Delivered</th>
                 <th>Shipped</th>
+
+                <th>Delivered</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -105,16 +106,18 @@ export default function OrderHistoryScreen() {
                   >
                     {isPaid(order)}
                   </td>
-                  <td className={order.isDelivered ? "green" : "red"}>
-                    {order.isDelivered
-                      ? order.deliveredAt.substring(0, 10)
-                      : "Not Delivered"}
-                  </td>
+
                   <td className={order.isShipped ? "green" : "red"}>
                     {order.isShipped
                       ? order.shippedAt.substring(0, 10)
                       : "Not Shipped"}
                   </td>
+                  <td className={order.isDelivered ? "green" : "red"}>
+                    {order.isDelivered
+                      ? order.deliveredAt.substring(0, 10)
+                      : "Not Delivered"}
+                  </td>
+
                   <td>
                     <Button
                       type="button"

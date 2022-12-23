@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import { Helmet } from "react-helmet-async";
 import Button from "react-bootstrap/Button";
 import "./Contacts.css";
 
@@ -41,8 +42,11 @@ const Contacts = () => {
   return (
     <>
       <section className="contact" id="contact">
+        <Helmet>
+          <title>Contact Amazona</title>
+        </Helmet>
         <h1 className="heading">
-          <span> contact us</span>
+          <span> contact Us</span>
         </h1>
 
         <div className="Contactsrow">
@@ -155,7 +159,7 @@ const Contacts = () => {
             </div>
           </div>
           <form action="" id="myForm" onSubmit={submitHandler}>
-            <h2 className="Contactheading">Send us message ...</h2>
+            <h2 className="Contactheading">Send us email..</h2>
             <input
               type="text"
               placeholder="Your Name..."

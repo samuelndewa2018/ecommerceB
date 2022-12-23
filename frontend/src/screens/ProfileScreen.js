@@ -6,7 +6,7 @@ import { Store } from "../Store";
 import { toast } from "react-toastify";
 import { getError } from "../utils";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
@@ -26,6 +26,7 @@ const reducer = (state, action) => {
 };
 
 export default function ProfileScreen() {
+  const navigate = useNavigate();
   const { state, dispatch: ctxDispatch } = useContext(Store);
   const { userInfo } = state;
   const [name, setName] = useState(userInfo.name);
@@ -70,12 +71,12 @@ export default function ProfileScreen() {
   };
   const signoutHandler = (e) => {
     e.preventDefault();
-    toast.success("Bye! Signed Out.");
+    toast.success("Signed Out. Bye!");
     ctxDispatch({ type: "USER_SIGNOUT" });
     localStorage.removeItem("userInfo");
     localStorage.removeItem("shippingAddress");
     localStorage.removeItem("paymentMethod");
-    // window.location.href = "/signin";
+    navigate("/");
   };
   return (
     <div className="container small-container">

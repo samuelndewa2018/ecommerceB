@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <style>
+    body {
+      margin: 10px 50px;
+    }
+  </style>
+  <body>
+    <h1>Scrolling effect</h1>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+    <p>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis fuga
+      quia ipsa laborum iure suscipit provident accusamus animi pariatur sint
+      officia esse ipsum eaque delectus, laudantium minima veritatis
+      exercitationem, magnam alias consequatur incidunt tempore?
+    </p>
+  </body>
+  <script>
+    window.addEventListener("scroll", () => {
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+      const scrolled = window.scrollY;
+      if (Math.ceil(scrolled) === scrollable) {
+        console.log("end reached");
+        alert("You reached to the bottom");
+      }
+      if (Math.ceil(scrolled) === 0) {
+        alert("You are at the top");
+      }
+    });
+  </script>
+</html>

@@ -196,7 +196,7 @@ export default function PlaceOrderScreen() {
                         onClick={placeOrderHandler}
                         disabled={cart.cartItems.length === 0}
                       >
-                        Place Order
+                        {loading ? "Placing...." : "Place Order"}
                       </Button>
                     </div>
                   </ListGroup.Item>

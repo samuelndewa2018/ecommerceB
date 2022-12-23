@@ -109,11 +109,18 @@ export default function SigninScreen() {
             </Button>
           </div>
           <div className="mb-3">
-            Forgot password? <Link to="/forgot">Forgot password</Link>
+            <p style={{ fontSize: "12px", color: "rgb(239 176 113)" }}>
+              {" "}
+              Forgot password? <Link to="/forgot">Forgot password</Link>
+            </p>
           </div>
           <div className="mb-3">
-            New customer?{" "}
-            <Link to={`/signup?redirect=${redirect}`}>Create your account</Link>
+          <p style={{ fontSize: "12px", color: "rgb(239 176 113)" }}>
+              New customer?{" "}
+              <Link to={`/signup?redirect=${redirect}`}>
+                Create your account
+              </Link>{" "}
+            </p>
           </div>
         </Form>
       </Container>

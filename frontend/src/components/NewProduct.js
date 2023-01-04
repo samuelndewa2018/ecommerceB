@@ -44,7 +44,7 @@ function NewProduct(props) {
             alt={newproduct.name}
           />
         </Link>
-        <Link to={`/newproduct/${newproduct.slug}`}>
+        <Link className="linkStyles2" to={`/newproduct/${newproduct.slug}`}>
           <Card.Title>{newproduct.name}</Card.Title>
         </Link>
         <Rating rating={newproduct.rating} numReviews={newproduct.numReviews} />

@@ -39,8 +39,442 @@ export default function PlaceOrderScreen() {
   cart.itemsPrice = round2(
     cart.cartItems.reduce((a, c) => a + c.quantity * c.price, 0)
   );
-  cart.shippingPrice = cart.itemsPrice > 100 ? round2(0) : round2(10);
-  cart.taxPrice = round2(0.15 * cart.itemsPrice);
+
+  // cart.taxPrice = round2(0.15 * cart.itemsPrice);
+  cart.taxPrice = 0;
+
+  if (cart.shippingAddress.city === "Nairobi") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Nyamira") {
+    const locationPrice = 200;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Kisii") {
+    const locationPrice = 200;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Migori") {
+    const locationPrice = 250;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Homa Bay") {
+    const locationPrice = 250;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Kisumu") {
+    const locationPrice = 250;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Siaya") {
+    const locationPrice = 280;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Busia") {
+    const locationPrice = 300;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Bungoma") {
+    const locationPrice = 280;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Vihiga") {
+    const locationPrice = 250;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Kakamega") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Bomet") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Kericho") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Kajiado") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Narok") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Nakuru") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Laikipia") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Baringo") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Nandi") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Elgeyo-Marakwet") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Uasin Gishu") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Trans-Nzoia") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Samburu") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "West Pokot") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Turkana") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Kiambu") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Murang'a") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Kirinyaga") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Nyeri") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Nyandarua") {
+    const locationPrice = 150;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Makueni") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Machakos") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Kitui") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Embu") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Tharaka-Nithi") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Meru") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Isiolo") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Marsabit") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Mandera") {
+    const locationPrice = 50;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Wajir") {
+    const locationPrice = 380;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Garissa") {
+    const locationPrice = 240;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Taita Taveta") {
+    const locationPrice = 250;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Lamu") {
+    const locationPrice = 350;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Tana River") {
+    const locationPrice = 250;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Kilifi") {
+    const locationPrice = 350;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Kwale") {
+    const locationPrice = 350;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "Mombasa") {
+    const locationPrice = 350;
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0 + locationPrice)
+        : cart.itemsPrice > 5000
+        ? round2(100 + locationPrice)
+        : round2(200 + locationPrice);
+  }
+  if (cart.shippingAddress.city === "") {
+    cart.shippingPrice =
+      cart.itemsPrice > 10000
+        ? round2(0)
+        : cart.itemsPrice > 5000
+        ? round2(100)
+        : round2(200);
+  }
+
   cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
 
   const placeOrderHandler = async () => {

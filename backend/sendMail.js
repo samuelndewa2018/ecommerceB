@@ -16,28 +16,13 @@ const sendMail = async (options) => {
     },
   });
 
-  transporter.use(
-    "compile",
-    hbs({
-      options,
-      viewPath: "./views/layouts",
-      viewEngine: "express-handlebars",
-    })
-  );
   const mailOptions = {
     from: process.env.SMPT_MAIL,
     to: options.email,
     subject: options.subject,
-    template: "index",
-    context: {
-      name: "Name",
-      message: options.message,
-    },
-
     text: options.message,
   };
 
   await transporter.sendMail(mailOptions);
 };
-
 export default sendMail;

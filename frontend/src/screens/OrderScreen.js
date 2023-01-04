@@ -309,11 +309,13 @@ export default function OrderScreen() {
                       <ListGroup.Item key={item._id}>
                         <Row className="align-items-center">
                           <Col md={6}>
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="img-fluid rounded img-thumbnail"
-                            ></img>{" "}
+                            <Link to={productLink(item)}>
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className="img-fluid rounded img-thumbnail"
+                              ></img>{" "}
+                            </Link>
                             <Link to={productLink(item)}>{item.name}</Link>
                           </Col>
                           <Col md={3}>

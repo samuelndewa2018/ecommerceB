@@ -269,6 +269,15 @@ userRouter.post(
       subject: `Contact Us`,
       message: ` Hello Amazona,\n${name}, of email ${email} and number ${subject} says:\n${message}`,
     });
+    await sendMail({
+      email: email,
+      subject: `Contact Us`,
+      message: `
+      Hello ${name}, 
+      Amazona has received your email. We will reply as soon as we can.
+      Thanks for contacting us.
+      `,
+    });
     res.send({
       sent,
       message: "Email sent. We will reply soon.",
